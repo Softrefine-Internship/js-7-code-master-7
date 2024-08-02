@@ -32,7 +32,9 @@ Create a dynamic and interactive JavaScript quiz application using HTML, CSS, an
 - Include a "Play New Quiz" button to start a new quiz with different options.
 
 **API Reference:**
+
 - [https://opentdb.com/api_config.php](https://opentdb.com/api_config.php)
+
 ### Technology Stack
 
 - HTML
