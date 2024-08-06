@@ -1,1 +1,340 @@
-/* write css here */
+:root {
+  --color-primary: #1b1967; /* #9b98e6*/
+  --color-secondary: #dedcff; /* #020024 */
+  --color-background: #fbfbfe; /* #010104 */
+  --color-text: #050315; /* #ebe9fc */
+
+  --color-accent: #433bff; /* #0600c2 */
+
+  --color-correct: #4bbb7d;
+  --color-incorect: #fd424b;
+
+  --box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  --box-shadow-error: rgba(204, 3, 3, 0.2) 0px 2px 8px 0px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html {
+  font-size: 62.5%;
+
+  @media screen and (max-width: 1000px) {
+    font-size: 55%;
+  }
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Mooli', sans-serif;
+  font-weight: 300;
+  color: var(--color-text);
+  line-height: 1.9;
+  background-color: var(--color-background);
+  height: 100vh;
+  /* padding: 1rem; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background-image: url('pz.jpg');
+  background-size: cover;
+}
+
+.btn {
+  background: none;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  background-color: var(--color-primary);
+  color: #fff;
+  padding: 1.5rem 4rem;
+  border-radius: 999px;
+  font-size: 1.5rem;
+  @media screen and (max-width: 1000px) {
+    padding: 1.5rem 2rem;
+  }
+  @media screen and (max-width: 500px) {
+    padding: 1rem 1.5rem;
+  }
+}
+
+.screen23__heading,
+.screen1__heading {
+  color: var(--color-primary);
+  font-size: 4rem;
+}
+
+/* Screen 1 */
+.screen1 {
+  display: flex;
+  flex-direction: column;
+
+  width: 50%;
+  /* max-width: 30%; */
+
+  padding: 2rem;
+
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 1rem;
+
+  /* Center */
+  margin-top: 50vh;
+  transform: translate(0, -50%);
+
+  box-shadow: var(--box-shadow);
+  background-color: hsla(0, 0%, 100%, 0.085);
+  backdrop-filter: blur(2rem);
+
+  @media screen and (max-width: 1000px) {
+    width: 70%;
+  }
+
+  @media screen and (max-width: 600px) {
+    width: 90%;
+  }
+}
+
+.screen1__heading {
+  text-align: center;
+}
+
+.screen1__body {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-bottom: 0.83em;
+  width: 100%;
+  max-width: 100rem;
+  position: relative;
+}
+
+.input {
+  border: none;
+  background: none;
+  outline: none;
+  background-color: var(--color-secondary);
+  padding: 1rem;
+
+  border-radius: 1rem;
+}
+
+.input::placeholder {
+  color: var(--color-text);
+}
+
+.screen1__footer {
+  text-align: center;
+}
+
+/* Screen 2 & Screen 3 */
+.screen23 {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin: 2rem;
+  height: calc(100vh - 2rem);
+  margin-top: 50vh;
+  border-radius: 1rem;
+  transform: translate(0, -50%);
+
+  /* height: -webkit-fill-available; */
+
+  min-width: 50%;
+  /* min-height: 50%; */
+
+  box-shadow: var(--box-shadow);
+  background-color: hsla(0, 0%, 100%, 0.085);
+  backdrop-filter: blur(2rem);
+
+  padding: 2rem;
+  gap: 2rem;
+
+  /* max-width: 50%; */
+
+  /* box-shadow: var(--box-shadow); */
+  @media screen and (max-width: 1200px) {
+    width: 80%;
+  }
+
+  @media screen and (max-width: 1000px) {
+    width: 90%;
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  @media screen and (max-width: 400px) {
+    width: 95%;
+    padding: 0.5rem;
+    gap: 0.5rem;
+  }
+}
+
+.screen23__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 2.3rem;
+
+  padding: 0 2rem;
+
+  @media screen and (max-width: 600px) {
+    font-size: 2rem;
+  }
+  @media screen and (max-width: 400px) {
+    padding: 0 0.5rem;
+  }
+}
+
+.screen23__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 1rem;
+  font-size: 1.5rem;
+  overflow: auto;
+
+  overflow: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  width: 100%;
+
+  @media screen and (max-width: 800px) {
+    padding: 1rem;
+    gap: 1rem;
+    /* line-height: 1.5; */
+  }
+
+  @media screen and (max-width: 400px) {
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    gap: 0.5rem;
+    /* line-height: 1.5; */
+  }
+}
+
+.card {
+  background-color: hsla(0, 0%, 100%, 0.3);
+  backdrop-filter: blur(2rem);
+  box-shadow: var(--box-shadow);
+  padding: 1rem;
+  border-radius: 1rem;
+  @media screen and (max-width: 400px) {
+    padding: 0.5rem;
+  }
+}
+
+.option__card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.option__card > * {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--color-secondary);
+  border-radius: 1rem;
+  gap: 1rem;
+}
+
+/* Hiding the radio icon */
+.option__card > * > :first-child {
+  display: none;
+}
+
+/* Centring the Text */
+.option__card > * > :last-child {
+  width: 100%;
+  margin-left: 1rem;
+  /* text-align: center; */
+}
+
+/* making selected radio bold */
+.option__card > * > :first-child:checked ~ :last-child {
+  font-weight: 600;
+}
+
+.screen233__footer {
+  margin-top: auto;
+}
+
+.action-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn--nextQuestion,
+.btn--previousQuestion,
+.btn--submitTest {
+  padding: 0.8rem 1.5rem;
+  margin-top: 1rem;
+  @media screen and (max-width: 1000px) {
+    /* padding: 1.5rem 3rem; */
+  }
+  @media screen and (max-width: 500px) {
+    padding: 0.5rem 1rem;
+    font-size: 1.2rem;
+  }
+}
+
+.btn--submitTest {
+  background-color: #00ff00;
+  color: #050315;
+  font-weight: bold;
+}
+.btn--nextQuestion {
+  margin-left: auto;
+}
+
+/* Screen 3 */
+/* Changed By JS */
+.screen3 {
+}
+/* on display answer */
+/* Correct selection */
+
+.correct {
+  background-color: var(--color-correct);
+  color: #fff;
+}
+.not_correct {
+  background-color: var(--color-incorect);
+  color: #fff;
+}
+
+.hide {
+  display: none;
+}
+
+.error-shadow {
+  background-color: hsla(0, 100%, 35%, 0.085);
+  backdrop-filter: blur(2rem);
+  box-shadow: var(--box-shadow-error);
+}
+
+.loading {
+  width: 30rem;
+  height: 30rem;
+  position: absolute;
+
+  z-index: 999;
+  top: 50%;
+  transform: translate(0, -50%);
+}
+
+.disabled {
+  background-color: #333;
+  color: #fff;
+}

@@ -1,13 +1,104 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
     <script defer src="script.js"></script>
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Mooli&display=swap"
+      rel="stylesheet"
+    />
+    <title>puzzled - Quize App</title>
+  </head>
+  <body>
+    <script
+      src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+      type="module"
+    ></script>
+
+    <dotlottie-player
+      src="https://lottie.host/4b0bbfb1-4f2f-4072-8fbd-3cfa408382bf/6q2hxITUPF.json"
+      background="transparent"
+      speed="1"
+      class="loading hide"
+      loop
+      autoplay
+    ></dotlottie-player>
+
+    <!-- Get data -->
+    <section class="screen1">
+      <div class="screen1__heading">
+        <h1>Puzzled</h1>
+      </div>
+      <div class="screen1__body">
+        <input
+          type="number"
+          class="input input--number"
+          placeholder="Enter Number of questions"
+        />
+        <!-- <span class="error">Error</span> -->
+        <select name="trivia_category" class="input input--category">
+          <option value="any">Any Category</option>
+          <option value="9">General Knowledge</option>
+          <option value="10">Entertainment: Books</option>
+          <option value="11">Entertainment: Film</option>
+          <option value="12">Entertainment: Music</option>
+          <option value="13">Entertainment: Musicals &amp; Theatres</option>
+          <option value="14">Entertainment: Television</option>
+          <option value="15">Entertainment: Video Games</option>
+          <option value="16">Entertainment: Board Games</option>
+          <option value="17">Science &amp; Nature</option>
+          <option value="18">Science: Computers</option>
+          <option value="19">Science: Mathematics</option>
+          <option value="20">Mythology</option>
+          <option value="21">Sports</option>
+          <option value="22">Geography</option>
+          <option value="23">History</option>
+          <option value="24">Politics</option>
+          <option value="25">Art</option>
+          <option value="26">Celebrities</option>
+          <option value="27">Animals</option>
+          <option value="28">Vehicles</option>
+          <option value="29">Entertainment: Comics</option>
+          <option value="30">Science: Gadgets</option>
+          <option value="31">Entertainment: Japanese Anime &amp; Manga</option>
+          <option value="32">Entertainment: Cartoon &amp; Animations</option>
+        </select>
+
+        <select name="trivia_difficulty" class="input input--dificulty">
+          <option value="any">Any Difficulty</option>
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+
+        <select name="trivia_type" class="input input--type">
+          &gt;
+          <option value="any">Any Type</option>
+          <option value="multiple">Multiple Choice</option>
+          <option value="boolean">True / False</option>
+        </select>
+      </div>
+
+      <div class="screen1__footer">
+        <button class="btn btn__start">Start Test</button>
+      </div>
+    </section>
+
+    <!-- Display Questions -->
+    <section class="screen23 hide">
+      <div class="screen23__heading">
+        <h1>Puzzled</h1>
+        <div class="score hide"><span>Score: </span> 1/2</div>
+      </div>
+
+      <div class="screen23__body"></div>
+      <div class="screen23__footer">
+        <!-- <button class="btn btn__submit">Submit Test</button> -->
+        <button class="btn btn__NewTest hide">New Test</button>
+      </div>
+    </section>
+  </body>
 </html>
