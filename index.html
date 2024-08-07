@@ -75,7 +75,6 @@
         </select>
 
         <select name="trivia_type" class="input input--type">
-          &gt;
           <option value="any">Any Type</option>
           <option value="multiple">Multiple Choice</option>
           <option value="boolean">True / False</option>
@@ -91,14 +90,25 @@
     <section class="screen23 hide">
       <div class="screen23__heading">
         <h1>Puzzled</h1>
-        <div class="score hide"><span>Score: </span> 1/2</div>
+        <div class="score"><span>Score: </span></div>
       </div>
 
       <div class="screen23__body"></div>
       <div class="screen23__footer">
-        <!-- <button class="btn btn__submit">Submit Test</button> -->
+        <button class="btn quit_btn">Quit Test</button>
         <button class="btn btn__NewTest hide">New Test</button>
       </div>
     </section>
+
+    <!-- Notification -->
+    <div
+      id="notification"
+      class="notification"
+      onmouseover="pauseTimer()"
+      onmouseout="resumeTimer()"
+    >
+      <p id="notificationMessage"></p>
+      <div id="progressBar" class="progress-bar"></div>
+    </div>
   </body>
 </html>

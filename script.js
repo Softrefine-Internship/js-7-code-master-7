@@ -1,5 +1,4 @@
 // compoment selection
-
 const screen1 = document.querySelector('.screen1');
 const screen2 = document.querySelector('.screen23');
 const screen2Body = document.querySelector('.screen23__body');
@@ -14,33 +13,38 @@ const inpType = document.querySelector('.input--type');
 
 const loading = document.querySelector('.loading');
 
+const displayScore = document.querySelector('.score');
+
+const quitBtn = document.querySelector('.quit_btn');
+
 let correctAnswers = 0;
 let numberOfQuestions = 0;
 
 inpNum.addEventListener('keypress', (e) => {
   if (e.key == 'e') e.preventDefault();
+  if (e.key == 'Enter') hitAPI();
 });
 
 // start test
-startBtn.addEventListener('click', (e) => {
-  if (inpNum.value.length == 0) inpNum.style.border = '1px solid red';
-  else {
+startBtn.addEventListener('click', (e) => hitAPI());
+
+function hitAPI() {
+  if (inpNum.value.length == 0) {
+    inpNum.style.border = '1px solid red';
+    showNotification('Enter Number of questions', 3);
+  } else {
     inpNum.style.border = '1px solid green';
+    numberOfQuestions = inpNum.value;
+    loading.classList.remove('hide');
+    startBtn.disabled = true;
+    startBtn.classList.add('disabled');
     try {
-      numberOfQuestions = inpNum.value;
-      // console.log('calling');
-      loading.classList.remove('hide');
-      startBtn.disabled = true;
-      startBtn.classList.add('disabled');
       callAPI(inpNum.value, inpCat.value, inpDiff.value, inpType.value);
     } catch (e) {
-      loading.classList.add('hide');
-      startBtn.classList.remove('disabled');
-      startBtn.disabled = false;
-      alert(e.message);
+      console.log('Error in hit API', e);
     }
   }
-});
+}
 
 // start New test
 newTestBtn.addEventListener('click', () => {
@@ -53,53 +57,56 @@ newTestBtn.addEventListener('click', () => {
 // Function to call API
 
 async function callAPI(num, cat, diff, typ) {
-  // console.log('hitting');
   let URL = `https://opentdb.com/api.php?amount=${num}`;
 
   if (cat != 'any') URL += `&category=${cat}`;
   if (diff != 'any') URL += `&difficulty=${diff}`;
   if (typ != 'any') URL += `&type=${typ}`;
 
-  // console.log(num, cat, diff, typ, URL);
+  let res, data;
+  try {
+    res = await fetch(URL);
+    data = await res.json();
+    if (!res.ok) throw new Error('Failed to fetch data');
 
-  const res = await fetch(URL);
-  const data = await res.json();
-  // console.log(data);
+    switch (data.response_code) {
+      case 0:
+        if (data.results.length != inpNum.value)
+          throw new Error(`Didn't recive that many questions `);
+        screen1.classList.add('hide');
+        screen2.classList.remove('hide');
+        displayScore.innerHTML = `<span>Score: </span> ${correctAnswers}/${numberOfQuestions}`;
 
-  // console.log(URL);
+        LoadQuestions(data.results);
 
-  switch (data.response_code) {
-    case 0:
-      screen1.classList.add('hide');
-      screen2.classList.remove('hide');
-      loading.classList.add('hide');
-      LoadQuestions(data.results);
-      break;
-    case 1:
-      alert(`Don't have enough questions`);
-      break;
+        break;
+      case 1:
+        throw new Error(`Don't have enough questions`);
 
-    case 2:
-      alert(`Invalid Parameter`);
-      break;
+      case 2:
+        throw new Error(`Invalid Parameter`);
 
-    case 3:
-      alert(`Token Not Found`);
-      break;
+      case 3:
+        throw new Error(`Token Not Found`);
 
-    case 4:
-      alert(`Token Empty`);
-      break;
+      case 4:
+        throw new Error(`Token Empty`);
 
-    case 5:
-      alert(`Rate Limit: Wait for 5 seconds before requesting again`);
-      break;
+      case 5:
+        throw new Error(
+          `Rate Limit: Wait for 5 seconds before requesting again`
+        );
+    }
+    loading.classList.add('hide');
+  } catch (e) {
+    loading.classList.add('hide');
+    startBtn.classList.remove('disabled');
+    startBtn.disabled = false;
+    showNotification(e.message, 5);
   }
-  loading.classList.add('hide');
-  startBtn.classList.remove('disabled');
-  startBtn.disabled = false;
 }
 
+// Generate array with all the options
 function optionArrayGenerator(correct, incorect, qNum) {
   let options = [];
 
@@ -158,45 +165,30 @@ function optionArrayGenerator(correct, incorect, qNum) {
       );
     });
   }
-
-  // console.log(options);
-
   return options;
 }
 
+// generate random number function
 const randomInt = (min, max) =>
   Math.floor(Math.random() * (max - min) + 1 + min);
 
+// adding option to single string
 function addOptions(correct, incorect, qNumber) {
   let options = '';
-
-  // console.log(incorect);
-
   let optionArray = optionArrayGenerator(correct, incorect, qNumber);
-
   let addedString = [];
-
   while (addedString.length != 4) {
-    // console.log(addedString);
     let index;
-    while (addedString.includes(index) || index == undefined) {
+    while (addedString.includes(index) || index == undefined)
       index = randomInt(-1, 3);
-      // console.log('inArray', index);
-    }
-    // console.log(index);
     addedString.push(index);
-    // console.log(optionArray[index], index);
     if (optionArray[index] != undefined) options += optionArray[index];
   }
-
-  // console.log(options, optionArray);
-
   return options;
 }
 
+// Insert question in screen
 function LoadQuestions(data) {
-  // console.log(data, data.length);
-
   data.forEach((que, i) => {
     screen2Body.insertAdjacentHTML(
       'beforeend',
@@ -209,20 +201,20 @@ function LoadQuestions(data) {
           </div >
                   <div class="action-button">
           <div class ="btn btn--previousQuestion">Previous</div>
-          <div class ="btn btn--nextQuestion">Next</div>
+          <div class ="btn btn--nextQuestion">Next Question</div>
         </div>
         </div>
     `
     );
   });
-  // console.log(data);
-  startQuiz(0);
+
+  startQuiz(0); // starting quiz show 1st question
 }
 
+// displaying specifick questions
 function startQuiz(i) {
-  // console.log(i);
   const questions = document.querySelectorAll('.card');
-  // console.log('list', questions);
+
   questions[i].classList.remove('hide');
   if (i == questions.length - 1) {
     questions[i].getElementsByClassName('action-button')[0].innerHTML = '';
@@ -235,52 +227,53 @@ function startQuiz(i) {
           <div class ="btn btn--submitTest">Submit</div>`;
   }
 
-  // console.log(questions);
-
-  if (i == 0) {
+  if (i == 0)
     questions[i]
       .getElementsByClassName('btn--previousQuestion')[0]
       .classList.add('hide');
-  }
+
   questions[i].addEventListener('click', (e) => {
-    // console.log(e.target);
+    let showAction = true;
+    let q = e.target.classList[1];
+    const otherOptions = document.querySelectorAll(`.${q}`);
+    otherOptions.forEach((e) => {
+      if (
+        e.parentNode.classList.contains('correct') ||
+        e.parentNode.classList.contains('not_correct')
+      )
+        showAction = false;
+    });
+
+    if (showAction) {
+      if (
+        e.target.classList.contains('option') &&
+        !e.target.parentNode.classList.contains('correct') &&
+        !e.target.parentNode.classList.contains('not_correct')
+      ) {
+        if (e.target.value == 'correct') {
+          e.target.parentNode.classList.add('correct');
+          correctAnswers++;
+          displayScore.innerHTML = `<span>Score: </span> ${correctAnswers}/${numberOfQuestions}`;
+        } else {
+          otherOptions.forEach((e) => {
+            if (e.value == 'correct')
+              if (e) e.parentNode.classList.add('correct');
+          });
+          e.target.parentNode.classList.add('not_correct');
+        }
+      }
+    }
+    // option select
+
+    // next question
     if (e.target.classList.contains('btn--nextQuestion')) {
-      // console.log(i);
-      const t = i + 1;
-      const qqq = document.querySelectorAll(`.que${t}`);
-      // console.log(qqq);
-      let input = false;
-      qqq.forEach((radioButton, i) => {
-        radioButton.checked ? (input = true) : '_';
-      });
+      questions.forEach((_, i) => questions[i].classList.add('hide'));
+      startQuiz(++i);
 
-      // console.log('checked');
-      if (input) {
-        questions[i].classList.remove('error-shadow');
-        questions.forEach((_, i) => questions[i].classList.add('hide'));
-        startQuiz(++i);
-      } else {
-        questions[i].classList.add('error-shadow');
-        // alert('Select one option');
-      }
+      // show result
     } else if (e.target.classList.contains('btn--submitTest')) {
-      // console.log(i, e);
-      let t = i + 1;
-      const qqq = document.querySelectorAll(`.que${t}`);
-      // console.log(qqq);
-      let input = false;
-      qqq.forEach((radioButton, i) => {
-        radioButton.checked ? (input = true) : '_';
-      });
-
-      // console.log('checked');
-      if (input) {
-        questions[i].classList.remove('error-shadow');
-        showResult();
-      } else {
-        questions[i].classList.add('error-shadow');
-        // alert('Select one option');
-      }
+      showResult();
+      quitBtn.classList.add('hide');
     } else if (e.target.classList.contains('btn--previousQuestion')) {
       questions.forEach((_, i) => questions[i].classList.add('hide'));
       startQuiz(--i);
@@ -288,34 +281,104 @@ function startQuiz(i) {
   });
 }
 
+// last screen with result
 function showResult() {
   const radioButtons = document.querySelectorAll('.option');
   const questions = document.querySelectorAll('.card');
-  // console.log(questions);
+
   radioButtons.forEach((radioButton, i) => {
-    console.table(radioButton.checked, radioButton.value);
-    if (radioButton.checked) {
-      if (radioButton.value == 'correct') correctAnswers++;
-
+    if (radioButton.checked)
       radioButton.parentNode.classList.add(radioButton.value);
-      // console.log('que = ', questions[i], i);
-    } else {
-      if (radioButton.value == 'correct')
-        radioButton.parentNode.classList.add(radioButton.value);
-    }
+    else if (radioButton.value == 'correct')
+      radioButton.parentNode.classList.add(radioButton.value);
   });
-
-  // console.log(correctAnswers);
 
   questions.forEach((e) => {
     e.getElementsByClassName('action-button')[0].innerHTML = '';
     e.classList.remove('hide');
   });
 
-  const displayScore = document.querySelector('.score');
   displayScore.innerHTML = `<span>Score: </span> ${correctAnswers}/${numberOfQuestions}`;
-  displayScore.classList.remove('hide');
 
   const nextTest = document.querySelector('.btn__NewTest');
   nextTest.classList.remove('hide');
+}
+
+// Quit
+quitBtn.addEventListener('click', () => {
+  showResult();
+  quitBtn.classList.add('hide');
+});
+
+// Notification
+let timerInterval;
+let startTime;
+let remainingTime;
+let duration;
+let isPaused = false;
+
+function showNotification(message, displayDuration) {
+  var notification = document.getElementById('notification');
+  var notificationMessage = document.getElementById('notificationMessage');
+  var progressBar = document.getElementById('progressBar');
+
+  notificationMessage.textContent = message;
+  notification.classList.add('show');
+
+  remainingTime = displayDuration * 1000; // Convert to milliseconds
+  duration = displayDuration * 1000; // Convert to milliseconds
+  progressBar.style.width = '100%';
+
+  startTime = null;
+  isPaused = false;
+
+  function animate(timestamp) {
+    if (!startTime) startTime = timestamp;
+    if (isPaused)
+      startTime += timestamp - (startTime + (duration - remainingTime));
+
+    let elapsed = timestamp - startTime;
+
+    remainingTime = duration - elapsed;
+
+    let progress = (remainingTime / duration) * 100;
+    progressBar.style.width = progress + '%';
+
+    if (remainingTime > 0) timerInterval = requestAnimationFrame(animate);
+    else {
+      notification.classList.remove('show');
+      cancelAnimationFrame(timerInterval);
+    }
+  }
+
+  timerInterval = requestAnimationFrame(animate);
+}
+
+function pauseTimer() {
+  isPaused = true;
+  cancelAnimationFrame(timerInterval);
+}
+
+function resumeTimer() {
+  isPaused = false;
+  timerInterval = requestAnimationFrame((timestamp) => {
+    startTime = timestamp - (duration - remainingTime);
+    animate(timestamp);
+  });
+}
+
+function animate(timestamp) {
+  if (!startTime) startTime = timestamp;
+  if (isPaused)
+    startTime += timestamp - (startTime + (duration - remainingTime));
+
+  let elapsed = timestamp - startTime;
+  remainingTime = duration - elapsed;
+
+  let progress = (remainingTime / duration) * 100;
+  document.getElementById('progressBar').style.width = progress + '%';
+
+  if (remainingTime > 0) timerInterval = requestAnimationFrame(animate);
+  else document.getElementById('notification').classList.remove('show');
+  cancelAnimationFrame(timerInterval);
 }
