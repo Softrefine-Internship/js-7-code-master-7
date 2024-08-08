@@ -211,6 +211,15 @@ function LoadQuestions(data) {
   startQuiz(0); // starting quiz show 1st question
 }
 
+// Load next question auto
+let NextTimer;
+let allowedAnswers = true;
+const nextQuestionTimer = (i, questions) => {
+  NextTimer = setTimeout(() => {
+    questions.forEach((_, i) => questions[i].classList.add('hide'));
+    startQuiz(++i);
+  }, 3000);
+};
 // displaying specifick questions
 function startQuiz(i) {
   const questions = document.querySelectorAll('.card');
@@ -233,6 +242,9 @@ function startQuiz(i) {
       .classList.add('hide');
 
   questions[i].addEventListener('click', (e) => {
+    if (e.target.classList.contains('option') && i != questions.length - 1)
+      nextQuestionTimer(i, questions);
+
     let showAction = true;
     let q = e.target.classList[1];
     const otherOptions = document.querySelectorAll(`.${q}`);
@@ -244,7 +256,7 @@ function startQuiz(i) {
         showAction = false;
     });
 
-    if (showAction) {
+    if (showAction && allowedAnswers) {
       if (
         e.target.classList.contains('option') &&
         !e.target.parentNode.classList.contains('correct') &&
@@ -267,14 +279,18 @@ function startQuiz(i) {
 
     // next question
     if (e.target.classList.contains('btn--nextQuestion')) {
+      clearTimeout(NextTimer);
       questions.forEach((_, i) => questions[i].classList.add('hide'));
       startQuiz(++i);
 
       // show result
     } else if (e.target.classList.contains('btn--submitTest')) {
+      clearTimeout(NextTimer);
+      allowedAnswers = false;
       showResult();
       quitBtn.classList.add('hide');
     } else if (e.target.classList.contains('btn--previousQuestion')) {
+      clearTimeout(NextTimer);
       questions.forEach((_, i) => questions[i].classList.add('hide'));
       startQuiz(--i);
     }
@@ -283,15 +299,16 @@ function startQuiz(i) {
 
 // last screen with result
 function showResult() {
+  clearTimeout(NextTimer);
+
   const radioButtons = document.querySelectorAll('.option');
-  const questions = document.querySelectorAll('.card');
 
   radioButtons.forEach((radioButton, i) => {
-    if (radioButton.checked)
-      radioButton.parentNode.classList.add(radioButton.value);
-    else if (radioButton.value == 'correct')
+    if (radioButton.value == 'correct')
       radioButton.parentNode.classList.add(radioButton.value);
   });
+
+  const questions = document.querySelectorAll('.card');
 
   questions.forEach((e) => {
     e.getElementsByClassName('action-button')[0].innerHTML = '';
@@ -306,6 +323,7 @@ function showResult() {
 
 // Quit
 quitBtn.addEventListener('click', () => {
+  allowedAnswers = false;
   showResult();
   quitBtn.classList.add('hide');
 });

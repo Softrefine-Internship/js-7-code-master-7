@@ -295,7 +295,7 @@ input::-webkit-inner-spin-button {
 
 /* making selected radio bold */
 .option__card > * > :first-child:checked ~ :last-child {
-  font-weight: 600;
+  /* font-weight: 600; */
 }
 
 .screen233__footer {
